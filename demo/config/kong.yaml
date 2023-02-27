@@ -1,0 +1,50 @@
+_format_version: "2.1"
+_transform: true
+
+upstreams:
+  - name: default-upstream
+    healthchecks:
+      active:
+        unhealthy:
+          tcp_failures: 3
+          timeouts: 3
+          http_failures: 3
+          interval: 5
+        type: https
+        http_path: "/"
+        timeout: 1
+        healthy:
+          successes: 0
+          interval: 0
+          http_statuses:
+            - 200
+            - 302
+        https_verify_certificate: true
+        concurrency: 10
+    slots: 200
+    targets:
+      - target: mock.codes:443
+        weight: 200
+      - target: mock.codes:80
+        weight: 200
+      - target: error.mock.codes:443
+        weight: 200
+
+services:
+  - name: GithubUsersApi
+    host: default-upstream
+    routes:
+      - name: "Test"
+        paths: ["/"]
+
+    plugins:
+      - name: proxy-cache
+        config:
+          cache_ttl: 300
+          strategy: memory
+
+plugins:
+  - name: proxy-cache
+    config:
+      cache_ttl: 60
+      strategy: memory
