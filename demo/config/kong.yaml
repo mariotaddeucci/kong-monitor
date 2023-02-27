@@ -1,0 +1,40 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: GithubApi
+    url: https://api.github.com/repos/mariotaddeucci/kong-monitor
+    routes:
+      - name: "GithubApi"
+        paths: ["/"]
+        strip_path: true
+
+  - name: KongApi
+    url: http://localhost:8001
+    routes:
+      - name: "KongApi"
+        strip_path: true
+        paths: ["/api"]
+        hosts: ["localhost"]
+    plugins:
+      - name: basic-auth
+        config:
+          hide_credentials: true
+
+  - name: KongMonitor
+    url: https://mariotaddeucci.github.io/kong-monitor/
+    routes:
+      - name: "Monitor"
+        paths: ["/"]
+        hosts: ["localhost"]
+    plugins:
+      - name: proxy-cache
+        config:
+          cache_ttl: 36000
+          strategy: memory
+
+consumers:
+  - username: test-user
+    basicauth_credentials:
+      - username: test
+        password: test
