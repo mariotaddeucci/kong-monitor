@@ -59,11 +59,20 @@ export const useKongStore = defineStore({
           if (!response.ok)
             throw new Error(`HTTP error! Status: ${response.status}`);
           const data = await response.json();
-          upstream.nodes = data.data.map((node: any) => new UpstreamNode(node));
+
+          const nodes = data.data.map(
+            (node: any) => new UpstreamNode(node)
+          ) as UpstreamNode[];
+
+          upstream.nodes = nodes.sort((v1, v2) =>
+            v1.target > v2.target ? 1 : -1
+          );
         })
       );
 
-      this.upstreamsData = upstreams;
+      this.upstreamsData = upstreams.sort((v1, v2) =>
+        v1.name > v2.name ? 1 : -1
+      );
     },
 
     async loadServiceData() {
@@ -74,7 +83,12 @@ export const useKongStore = defineStore({
         throw new Error(`HTTP error! Status: ${response.status}`);
 
       const data = await response.json();
-      this.servicesData = data.data.map((service: any) => new Service(service));
+      const services = data.data.map(
+        (service: any) => new Service(service)
+      ) as Service[];
+      this.servicesData = services.sort((v1, v2) =>
+        v1.name > v2.name ? 1 : -1
+      );
     },
   },
 });

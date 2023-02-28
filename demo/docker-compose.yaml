@@ -14,5 +14,6 @@ services:
       KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yaml"
     ports:
       - 8000:8000
+      - 8001:8001
     volumes:
       - ./config/kong.yaml:/opt/kong/kong.yaml:ro
