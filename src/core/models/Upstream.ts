@@ -25,7 +25,7 @@ export class Upstream {
         if (node.health == "HEALTHY") accumulator["up"] += node.weight;
         return accumulator;
       },
-      { tot: 0, up: 0 }
+      { tot: 0, up: 0 },
     );
     return resume["up"] / resume["tot"];
   }
