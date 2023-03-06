@@ -50,7 +50,7 @@ export const useKongStore = defineStore({
 
       const data = await response.json();
       const upstreams: Upstream[] = data.data.map(
-        (upstream: any) => new Upstream(upstream)
+        (upstream: any) => new Upstream(upstream),
       );
 
       await Promise.all(
@@ -61,17 +61,17 @@ export const useKongStore = defineStore({
           const data = await response.json();
 
           const nodes = data.data.map(
-            (node: any) => new UpstreamNode(node)
+            (node: any) => new UpstreamNode(node),
           ) as UpstreamNode[];
 
           upstream.nodes = nodes.sort((v1, v2) =>
-            v1.target > v2.target ? 1 : -1
+            v1.target > v2.target ? 1 : -1,
           );
-        })
+        }),
       );
 
       this.upstreamsData = upstreams.sort((v1, v2) =>
-        v1.name > v2.name ? 1 : -1
+        v1.name > v2.name ? 1 : -1,
       );
     },
 
@@ -84,10 +84,10 @@ export const useKongStore = defineStore({
 
       const data = await response.json();
       const services = data.data.map(
-        (service: any) => new Service(service)
+        (service: any) => new Service(service),
       ) as Service[];
       this.servicesData = services.sort((v1, v2) =>
-        v1.name > v2.name ? 1 : -1
+        v1.name > v2.name ? 1 : -1,
       );
     },
   },
